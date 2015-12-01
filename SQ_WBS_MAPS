@@ -1,0 +1,7 @@
+-- Create sequence 
+create sequence LPV_INTERFAZ_WS.SQ_WBS_MAPS
+minvalue 0
+maxvalue 999999999999
+start with 458
+increment by 1
+nocache;
