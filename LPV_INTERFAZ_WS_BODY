@@ -1,0 +1,370 @@
+CREATE OR REPLACE PACKAGE BODY LPV_INTERFAZ_WS."PKG_SAPEQUI" IS
+
+PROCEDURE SP_SEL_OFIC_REG_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_OFIC_REG_SAP                                             */
+        /* OBJETIVO  : OBTIENE LA OFICICA Y REGION SAP EN BASE A LA OFICIA CORE       */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_N001_OFICCORE IN INTEGER ,
+ PUOT_S002_OFISAP  OUT CHAR,
+ PUOT_S003_REGSAP  OUT CHAR,
+ PUOT_S004_NEGSAP  OUT CHAR
+ ) AS
+
+AUX CHAR(2);
+AUX2 CHAR(2);
+AUX3 CHAR(1);
+
+BEGIN
+
+
+
+   SELECT OFS.S002_IDOFICSAP, OFS.S003_IDDREGSAP, OFS.S004_TNEGSAP INTO AUX, AUX2, AUX3
+   FROM TB024_OF_DEP_SAP OFS
+   WHERE OFS.N001_IDOFICCORE = PIN_N001_OFICCORE;
+   
+ PUOT_S002_OFISAP := AUX;
+ PUOT_S003_REGSAP := AUX2;
+ PUOT_S004_NEGSAP := AUX3;
+
+
+END SP_SEL_OFIC_REG_SAP;
+
+
+PROCEDURE SP_SEL_OFIC_REG_CORE
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_OFIC_REG_CORE                                             */
+        /* OBJETIVO  : OBTIENE LA OFICICA Y REGION CORE EN BASE A LA OFICIA SAP       */
+    
+        /*----------------------------------------------------------------------------*/
+
+(
+ PIN_S002_OFISAP  IN CHAR,
+ PIN_S004_NEGSAP  IN CHAR,
+ POUT_N001_OFICCORE OUT INTEGER
+ ) AS
+
+AUX INTEGER;
+
+BEGIN
+
+
+
+   SELECT max(OFS.N001_IDOFICCORE) INTO AUX
+   FROM TB024_OF_DEP_SAP OFS
+   WHERE OFS.S002_IDOFICSAP = PIN_S002_OFISAP AND OFS.S004_TNEGSAP = PIN_S004_NEGSAP;
+   POUT_N001_OFICCORE := AUX;
+ 
+
+
+END SP_SEL_OFIC_REG_CORE;
+
+
+PROCEDURE SP_SEL_RAMO_OF_UNEGSAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_RAMO_UNEGSAP                                             */
+        /* OBJETIVO  : OBTIENE LA UNIDAD DE NEGOCIO SAP EN BASE AL RAMO CORE           */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_N001_RAMOCORE IN INTEGER ,
+ PIN_N003_OFCORE IN INTEGER ,
+ PUOT_N002_UNEGSAP  OUT CHAR
+ ) AS
+
+AUX CHAR(2);
+
+BEGIN
+
+   IF PIN_N001_RAMOCORE = 81 AND PIN_N003_OFCORE = 54 THEN
+      AUX:='21';
+
+   ELSE
+    SELECT UNEG.S002_UNEGSAP INTO  AUX
+    FROM TB025_RAMO_UNEGSAP UNEG
+    WHERE UNEG.N001_RAMOCORE = PIN_N001_RAMOCORE AND
+         (UNEG.N003_OFCORE = PIN_N003_OFCORE OR UNEG.N003_OFCORE IS NULL);
+   
+   END IF;
+   PUOT_N002_UNEGSAP:=AUX;
+
+END SP_SEL_RAMO_OF_UNEGSAP;
+
+
+
+PROCEDURE SP_SEL_RAMO_OF_UNEGSAP_COMP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_RAMO_OF_UNEGSAP_COMP                                             */
+        /* OBJETIVO  : OBTIENE LA UNIDAD DE NEGOCIO SAP EN BASE AL RAMO CORE Y COMPAÑIA         */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_N001_RAMOCORE IN INTEGER,
+ PIN_N003_OFCORE IN INTEGER,
+ PIN_N004_COMPANIA IN INTEGER,
+ PUOT_N002_UNEGSAP  OUT CHAR
+ ) AS
+
+AUX CHAR(2);
+
+BEGIN
+
+   IF PIN_N001_RAMOCORE = 81 AND PIN_N003_OFCORE = 54 THEN
+      AUX:='21';
+
+   ELSE
+    SELECT UNEG.S002_UNEGSAP INTO  AUX
+    FROM TB025_RAMO_UNEGSAP_COMP UNEG
+    WHERE UNEG.N001_RAMOCORE = PIN_N001_RAMOCORE AND
+         (UNEG.N003_OFCORE = PIN_N003_OFCORE OR UNEG.N003_OFCORE IS NULL)
+         AND UNEG.N004_COMPANIA = PIN_N004_COMPANIA;
+   
+   END IF;
+   PUOT_N002_UNEGSAP:=AUX;
+
+END SP_SEL_RAMO_OF_UNEGSAP_COMP;
+
+PROCEDURE SP_SEL_MONT_PERC_DET
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_MONT_PERC_DET                                             */
+        /* OBJETIVO  : OBTIENE MONTO Y PORCENTAJE DE DETRACCION EN BASE AL TIPO EN INDICADOR       */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_S001_TIPO IN CHAR ,
+ PIN_S002_INDICADOR  IN CHAR,
+ PUOT_N003_PERCENT  OUT NUMBER,
+ PUOT_N004_MONTO OUT NUMBER
+ ) AS
+
+
+
+BEGIN
+
+
+
+   SELECT DET.N003_PERCENT, DET.N004_MONTO INTO  PUOT_N003_PERCENT,PUOT_N004_MONTO
+   FROM TB026_DETRAC_MONT_PERC DET
+   WHERE DET.S001_TIPO =  PIN_S001_TIPO AND
+         DET.S002_INDICADOR = PIN_S002_INDICADOR ;
+  
+   
+ 
+
+
+END SP_SEL_MONT_PERC_DET;
+
+
+PROCEDURE SP_SEL_RAMO_UNEGSAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_RAMO_UNEGSAP                                             */
+        /* OBJETIVO  : OBTIENE LA UNIDAD DE NEGOCIO SAP EN BASE AL RAMO CORE           */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_N001_RAMOCORE IN INTEGER ,
+ PUOT_N002_UNEGSAP  OUT CHAR
+ ) AS
+
+AUX CHAR(2);
+
+BEGIN
+
+ 
+    SELECT UNEG.S002_UNEGSAP INTO  AUX
+    FROM TB025_RAMO_UNEGSAP UNEG
+    WHERE UNEG.N001_RAMOCORE = PIN_N001_RAMOCORE ;
+  
+   PUOT_N002_UNEGSAP:=AUX;
+
+END SP_SEL_RAMO_UNEGSAP;
+
+PROCEDURE SP_SEL_TIPODOC_T1_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_TIPODOC_T1_SAP                                            */
+        /* OBJETIVO  : OBTIENE TIPO DOCUMENTO SAP EN BASE AL TIPO DOCUMENTO SGC TABLA 1 */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_S001_TIPODOC_CORE IN VARCHAR2 ,
+ PUOT_S002_TIPODOC_SAP  OUT VARCHAR2
+ ) AS
+
+AUX VARCHAR2(2);
+
+BEGIN
+
+     IF PIN_S001_TIPODOC_CORE IS NULL THEN
+        AUX:=NULL;
+    ELSE
+     SELECT TB1.S002_TIPDOCSAP INTO  AUX
+     FROM TB027_TIPDOC_TB1 TB1
+     WHERE TB1.S001_TIPDOCCORE = PIN_S001_TIPODOC_CORE;
+    END IF;
+   PUOT_S002_TIPODOC_SAP:=AUX;
+
+END SP_SEL_TIPODOC_T1_SAP;
+
+PROCEDURE SP_SEL_TIPODOC_T2_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_TIPODOC_T1_SAP                                            */
+        /* OBJETIVO  : OBTIENE TIPO DOCUMENTO SAP EN BASE AL TIPO DOCUMENTO SGC TABLA 2 */
+    
+        /*----------------------------------------------------------------------------*/
+
+(PIN_S001_TIPODOC_CORE IN VARCHAR2 ,
+ PUOT_S002_TIPODOC_SAP  OUT VARCHAR2
+ ) AS
+
+AUX VARCHAR2(2);
+
+BEGIN
+    IF PIN_S001_TIPODOC_CORE IS NULL THEN
+        AUX:=NULL;
+    ELSE
+     SELECT TB2.S002_TIPDOCSAP INTO  AUX
+     FROM TB028_TIPDOC_TB2 TB2
+     WHERE TB2.S001_TIPDOCCORE = PIN_S001_TIPODOC_CORE;
+    END IF;
+   PUOT_S002_TIPODOC_SAP:=AUX;
+
+END SP_SEL_TIPODOC_T2_SAP;
+
+PROCEDURE SP_INS_ZCOLLECTION01_TMP_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_INS_ZCOLLECTION01_TMP_SAP                                   */
+        /* OBJETIVO  : INSERTA DATA DE IDOC EN TABALA WBS_ZCOLLECTION01               */
+        /* AUTOR     : FRANK ROJAS ORE                                                */
+        /*----------------------------------------------------------------------------*/
+
+(PIN_BUKRS               IN WBS_ZCOLLECTION01.BUKRS%TYPE,
+ PIN_BELNR               IN WBS_ZCOLLECTION01.BELNR%TYPE,
+ PIN_POONU               IN WBS_ZCOLLECTION01.POONU%TYPE,
+ PIN_PLNCB               IN WBS_ZCOLLECTION01.PLNCB%TYPE,
+ PIN_ZCB_PLANEST         IN WBS_ZCOLLECTION01.ZCB_PLANEST%TYPE,
+ PIN_KURSF               IN WBS_ZCOLLECTION01.KURSF%TYPE,
+ PIN_ZCB_SUCUR           IN WBS_ZCOLLECTION01.ZCB_SUCUR%TYPE,
+ PIN_WAERS               IN WBS_ZCOLLECTION01.WAERS%TYPE,
+ PIN_BUDAT               IN WBS_ZCOLLECTION01.BUDAT%TYPE,
+ PIN_ZOR_NREG            IN WBS_ZCOLLECTION01.ZOR_NREG%TYPE,
+ PIN_ZOR_TIPO            IN WBS_ZCOLLECTION01.ZOR_TIPO%TYPE,
+ PIN_ZOR_NDOC            IN WBS_ZCOLLECTION01.ZOR_NDOC%TYPE,
+ PIN_ZOR_NFIN            IN WBS_ZCOLLECTION01.ZOR_NFIN%TYPE,
+ PIN_DRAFT               IN WBS_ZCOLLECTION01.DRAFT%TYPE,
+ PIN_ZFC_TIPO            IN WBS_ZCOLLECTION01.ZFC_TIPO%TYPE,
+ PIN_ZFC_SERIE           IN WBS_ZCOLLECTION01.ZFC_SERIE%TYPE,
+ PIN_ZFC_NDOC            IN WBS_ZCOLLECTION01.ZFC_NDOC%TYPE,
+ PIN_ZOR_TIPO2           IN WBS_ZCOLLECTION01.ZOR_TIPO2%TYPE,
+ PIN_ZCB_CANEST          IN WBS_ZCOLLECTION01.ZCB_CANEST%TYPE,
+ PIN_ZCB_RAMO            IN WBS_ZCOLLECTION01.ZCB_RAMO%TYPE,
+ PIN_ZOR_MONEDA          IN WBS_ZCOLLECTION01.ZOR_MONEDA%TYPE,
+ PIN_ZCB_MONTO           IN WBS_ZCOLLECTION01.ZCB_MONTO%TYPE,
+ PIN_ZOR_CLIENT          IN WBS_ZCOLLECTION01.ZOR_CLIENT%TYPE,
+ PIN_ZCB_TIPO            IN WBS_ZCOLLECTION01.ZCB_TIPO%TYPE,
+ PIN_ZCB_NDOC            IN WBS_ZCOLLECTION01.ZCB_NDOC%TYPE,
+ PIN_ZCB_GIRO            IN WBS_ZCOLLECTION01.ZCB_GIRO%TYPE,
+ PIN_ZCO_OFICI           IN WBS_ZCOLLECTION01.ZCO_OFICI%TYPE,
+ PIN_ZOR_SISTOR          IN WBS_ZCOLLECTION01.ZOR_SISTOR%TYPE,
+ PIN_ESTADO              IN WBS_ZCOLLECTION01.ESTADO%TYPE,
+ PIN_ERROR               IN WBS_ZCOLLECTION01.ERROR%TYPE,
+ PIN_SECIM               IN WBS_ZCOLLECTION01.SECIM%TYPE
+  ) AS
+  ID_AUX NUMBER;
+BEGIN
+    
+    SELECT SQ_WBS_ZCOLLECTION01.nextval INTO ID_AUX FROM DUAL;
+    INSERT INTO WBS_ZCOLLECTION01(ID,BUKRS, BELNR, POONU, PLNCB, ZCB_PLANEST, KURSF, ZCB_SUCUR, WAERS, BUDAT, ZOR_NREG , ZOR_TIPO, ZOR_NDOC, ZOR_NFIN, DRAFT, ZFC_TIPO, ZFC_SERIE, ZFC_NDOC, ZOR_TIPO2, ZCB_CANEST, ZCB_RAMO, ZOR_MONEDA, ZCB_MONTO, ZOR_CLIENT,ZCB_TIPO,ZCB_NDOC,ZCB_GIRO,ZCO_OFICI,ZOR_SISTOR, ESTADO, ERROR, SECIM)
+    VALUES(ID_AUX,PIN_BUKRS, PIN_BELNR, PIN_POONU, PIN_PLNCB, PIN_ZCB_PLANEST, PIN_KURSF, PIN_ZCB_SUCUR, PIN_WAERS, PIN_BUDAT, PIN_ZOR_NREG, PIN_ZOR_TIPO, PIN_ZOR_NDOC, PIN_ZOR_NFIN, PIN_DRAFT, PIN_ZFC_TIPO, PIN_ZFC_SERIE, PIN_ZFC_NDOC, PIN_ZOR_TIPO2, PIN_ZCB_CANEST, PIN_ZCB_RAMO, PIN_ZOR_MONEDA, PIN_ZCB_MONTO, PIN_ZOR_CLIENT,PIN_ZCB_TIPO,PIN_ZCB_NDOC,PIN_ZCB_GIRO,PIN_ZCO_OFICI,PIN_ZOR_SISTOR, PIN_ESTADO, PIN_ERROR, PIN_SECIM);
+
+END SP_INS_ZCOLLECTION01_TMP_SAP;
+
+PROCEDURE SP_SEL_ZCOLLECTION01_TMP_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_ZCOLLECTION01_TMP_SAP                                   */
+        /* OBJETIVO  : INSERTA DATA DE IDOC EN TABALA WBS_ZCOLLECTION01               */
+        /* AUTOR     : FRANK ROJAS ORE                                                */
+        /*----------------------------------------------------------------------------*/
+(
+ PIN_ID               IN WBS_ZCOLLECTION01.ID%TYPE,
+ SEL_OUT              OUT RCTSEL_TMP
+) AS
+  
+BEGIN
+    
+OPEN SEL_OUT
+FOR SELECT A.ID,A.BUKRS, A.BELNR, A.POONU, A.PLNCB, A.ZCB_PLANEST, A.KURSF, A.ZCB_SUCUR, A.WAERS, A.BUDAT, A.ZOR_NREG , A.ZOR_TIPO, A.ZOR_NDOC, A.ZOR_NFIN, A.DRAFT, A.ZFC_TIPO, A.ZFC_SERIE, A.ZFC_NDOC, A.ZOR_TIPO2, A.ZCB_CANEST, A.ZCB_RAMO, A.ZOR_MONEDA, A.ZCB_MONTO, A.ZOR_CLIENT,A.ZCB_TIPO,A.ZCB_NDOC,A.ZCB_GIRO,A.ZCO_OFICI,A.ZOR_SISTOR, A.ESTADO, A.ERROR, A.SECIM
+    FROM WBS_ZCOLLECTION01 A
+    WHERE ID = PIN_ID;
+
+END SP_SEL_ZCOLLECTION01_TMP_SAP;
+
+PROCEDURE SP_INS_ZCOLLECTION01_LOG_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_INS_ZCOLLECTION01_LOG_SAP                                   */
+        /* OBJETIVO  : INSERTA DATA DE IDOC EN TABALA WBS_ZCOLLECTION01_LOG           */
+        /* AUTOR     : FRANK ROJAS ORE                                                */
+        /*----------------------------------------------------------------------------*/
+
+(PIN_NUM_IDOC                IN WBS_ZCOLLECTION01_LOG.NUM_IDOC%TYPE,
+ PIN_BUKRS                   IN WBS_ZCOLLECTION01_LOG.BUKRS%TYPE,
+ PIN_BELNR                   IN WBS_ZCOLLECTION01_LOG.BELNR%TYPE,
+ PIN_SISTEMA                 IN WBS_ZCOLLECTION01_LOG.SISTEMA%TYPE,
+ PIN_ERROR                   IN WBS_ZCOLLECTION01_LOG.ERROR%TYPE,
+ PIN_CODERROR                IN WBS_ZCOLLECTION01_LOG.CODERROR%TYPE 
+ ) AS
+  ID_AUX NUMBER;
+BEGIN
+    
+    SELECT SQ_WBS_ZCOLLECTION01_LOG.nextval INTO ID_AUX FROM DUAL;
+    INSERT INTO WBS_ZCOLLECTION01_LOG(ID,NUM_IDOC, BUKRS, BELNR, SISTEMA,ERROR,CODERROR,Fecha)
+    VALUES(ID_AUX,PIN_NUM_IDOC, PIN_BUKRS, PIN_BELNR, PIN_SISTEMA,PIN_ERROR,PIN_CODERROR,SYSDATE);
+
+END SP_INS_ZCOLLECTION01_LOG_SAP;
+
+PROCEDURE SP_SEL_ZCOLLECTION01_LOG_SAP
+/*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_ZCOLLECTION01_LOG_SAP                                   */
+        /* OBJETIVO  : OBTIENE DATA DE IDOC EN TABALA WBS_ZCOLLECTION01_LOG           */
+        /* AUTOR     : FRANK ROJAS ORE                                                */
+/*----------------------------------------------------------------------------*/
+(
+ PIN_NUM_IDOC         IN WBS_ZCOLLECTION01_LOG.NUM_IDOC%TYPE,
+ SEL_OUT              OUT RCTSEL_LOG
+) AS 
+BEGIN
+    
+OPEN SEL_OUT
+FOR SELECT A.ID,A.NUM_IDOC,A.BUKRS,A.BELNR,A.SISTEMA,A.ERROR,A.CODERROR
+    FROM WBS_ZCOLLECTION01_LOG A
+    WHERE NUM_IDOC = PIN_NUM_IDOC;
+    
+END SP_SEL_ZCOLLECTION01_LOG_SAP;
+
+PROCEDURE SP_SEL_MAPS_SAP
+        /*----------------------------------------------------------------------------*/
+        /* NOMBRE    : SP_SEL_MAPS_SAP                                                */
+        /* OBJETIVO  : SP PARA MAPEOS                                                 */
+		/* AUTOR     : Frank Rojas Oré                                                */
+        /*----------------------------------------------------------------------------*/
+
+(PIN_NAME IN WBS_MAPS.NAME%TYPE,
+PIN_INT IN WBS_MAPS.INTERFAZ%TYPE,
+PIN_INPUT IN WBS_MAPS.INPUT%TYPE,
+ PUOT_OUTPUT  OUT WBS_MAPS.OUTPUT%TYPE
+ ) AS
+
+AUX VARCHAR(255);
+BEGIN
+
+
+SELECT OUTPUT INTO AUX 
+FROM WBS_MAPS 
+WHERE NAME = PIN_NAME AND INTERFAZ = PIN_INT AND INPUT = PIN_INPUT and rownum <= 1;
+   
+ PUOT_OUTPUT := AUX;
+
+END SP_SEL_MAPS_SAP;
+
+END PKG_SAPEQUI;
