@@ -1,0 +1,42 @@
+create procedure "informix".wbsprcselpro005_aux (nsequence integer, p_receipt integer,p_transac integer,counter integer)
+				
+  define l_comp_code             integer;
+  define l_coinsurer             char(10);
+  define l_coinsuran_date        date;
+  define l_coinsuran_percent     decimal(13,2);
+  define l_prem_trans_amount     decimal(13,2);
+  define l_coinsuran_commision   decimal(13,2);
+  define l_extemporaneous        char(01);
+  define l_coinsuran_expense     decimal(13,2);
+  define l_coinsuran_expense_igv decimal(13,2);
+  define lc_payroll              char(22);
+  define l_rectype      integer;
+  define l_origincoupon integer;
+  define l_type_doc     integer;
+  define sql_err            int;
+  define isam_err           int;
+  define error_info         char(100);
+	
+	on exception set sql_err,isam_err,error_info
+	INSERT INTO "informix".wbsprcselpro005
+			VALUES (l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_coinsurer,
+							l_coinsuran_date,l_coinsuran_percent,l_prem_trans_amount,l_coinsuran_commision,l_extemporaneous,
+							l_coinsuran_expense,l_coinsuran_expense_igv,lc_payroll,counter,p_transac,nsequence,sql_err||': '||error_info);
+		
+	end exception;	
+
+	foreach execute procedure 
+		"informix".wbsprcselpro005(p_receipt,p_transac) into l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_coinsurer,
+															 l_coinsuran_date,l_coinsuran_percent,l_prem_trans_amount,l_coinsuran_commision,l_extemporaneous,
+															 l_coinsuran_expense,l_coinsuran_expense_igv,lc_payroll
+		
+			INSERT INTO "informix".wbsprcselpro005(l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_coinsurer,l_coinsuran_date,l_coinsuran_percent,
+									l_prem_trans_amount,l_coinsuran_commision,l_extemporaneous,l_coinsuran_expense,l_coinsuran_expense_igv,lc_payroll,counter,
+									p_transac,sequence)
+			VALUES (l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_coinsurer,
+							l_coinsuran_date,l_coinsuran_percent,l_prem_trans_amount,l_coinsuran_commision,l_extemporaneous,
+							l_coinsuran_expense,l_coinsuran_expense_igv,lc_payroll,counter,p_transac,nsequence);
+					
+	end foreach;
+
+end procedure;                                                                                                                                                  
