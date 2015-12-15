@@ -1,0 +1,57 @@
+create procedure "informix".wbsprcselpro002_aux (nsequence integer, p_receipt integer,p_transac integer,counter integer)
+		
+  define l_comp_code      integer;
+  define l_premium        integer;
+  define l_Type_doc       integer;
+  define l_Rectype        integer;
+  define l_Cuponera       integer;
+  define l_ramcom         integer;
+  define l_policy         integer;
+  define l_validity_beg   date;
+  define l_validity_end   date;
+  define lc_customer      char(10);
+  define l_certificado    char(10);
+  define l_coinsuran      char(01);
+  define l_consortium     char(01);
+  define l_reinsuran      char(01);
+  define l_nullcode       char(03);
+  define l_premium_rev    integer;
+  define l_premium_libcom smallint;
+  define l_effecdate_pol date;
+  define l_expirdat_pol date;
+  define l_endo_pol char(1);
+  define l_scoderrors     char(255);
+  define sql_err            int;
+  define isam_err           int;
+  define error_info         char(100);
+  	
+	on exception set sql_err,isam_err,error_info
+		INSERT INTO "informix".wbsprcselpro002
+			VALUES (l_comp_code,l_premium,l_Type_doc,
+					l_Rectype,l_Cuponera,l_ramcom,
+					l_policy,l_validity_beg,l_validity_end,
+					lc_customer,l_certificado,l_coinsuran,
+					l_consortium,l_reinsuran,l_nullcode,
+					l_premium_rev,l_premium_libcom,l_effecdate_pol,l_expirdat_pol,l_endo_pol,sql_err||': '||error_info,
+					counter,nsequence,p_transac);
+		
+	end exception;
+
+	foreach execute procedure 
+		"informix".wbsprcselpro002(p_receipt,p_transac) into l_comp_code,l_premium,l_Type_doc,l_Rectype,l_Cuponera,l_ramcom,l_policy,l_validity_beg,
+															 l_validity_end,lc_customer,l_certificado,l_coinsuran,l_consortium,l_reinsuran,l_nullcode,l_premium_rev,l_premium_libcom,
+															 l_effecdate_pol,l_expirdat_pol,l_endo_pol,l_scoderrors
+
+			INSERT INTO "informix".wbsprcselpro002
+			VALUES (l_comp_code,l_premium,l_Type_doc,
+					l_Rectype,l_Cuponera,l_ramcom,
+					l_policy,l_validity_beg,l_validity_end,
+					lc_customer,l_certificado,l_coinsuran,
+					l_consortium,l_reinsuran,l_nullcode,
+					l_premium_rev,l_premium_libcom,
+					l_effecdate_pol,l_expirdat_pol,l_endo_pol,l_scoderrors,
+					counter,nsequence,p_transac);
+							
+	end foreach;
+
+end procedure;                                                                                     
