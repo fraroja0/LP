@@ -1,0 +1,30 @@
+create procedure "informix".wbsprcselpro001_aux (p_sequence integer, counter integer)
+
+  define li_company   integer;
+  define li_doctype   integer;
+  define li_receipt   integer;
+  define li_rectype   integer;
+  define li_ori_cupon integer;
+  define l_transac    integer;
+  define l_statdate   date;
+  define l_action     varchar(3);
+  define l_ramcom_pol varchar(20);  --#WIMN 2015-0134
+  define l_scoderrors char(255);
+
+execute procedure "informix".wbsprcselpro001(p_sequence) into li_company, li_doctype, li_receipt, li_rectype, li_ori_cupon,l_transac,l_statdate,l_action,l_ramcom_pol, l_scoderrors;
+
+	INSERT INTO "informix".wbsprcselpro001
+	VALUES (p_sequence,
+				 li_company,
+         li_doctype,
+         li_receipt,
+         li_rectype,
+         li_ori_cupon,
+         l_transac,
+         l_statdate,
+         l_action,
+         l_ramcom_pol,
+         l_scoderrors,
+         counter);
+	
+end procedure;   
