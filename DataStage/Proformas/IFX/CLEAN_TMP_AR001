@@ -1,0 +1,104 @@
+create procedure "informix".CLEAN_TMP_AR001 (status integer)
+
+drop table "informix".wbsprcselpro001;
+drop table "informix".wbsprcselpro002;
+drop table "informix".wbsprcselpro003;
+drop table "informix".wbsprcselpro004;
+drop table "informix".wbsprcselpro005;
+drop table "informix".wbsprcselpro006;
+drop table "informix".wbsprcselpro007;
+
+{ TABLE "informix".wbsprcselpro001 row size = 295 number of columns = 11 index size 
+              = 0 }
+create table "informix".wbsprcselpro001 
+  (
+    nsequence integer,    li_company integer,    li_doctype integer,    li_receipt integer,
+    li_rectype integer,    li_ori_cupon integer,    l_transac integer,    l_statdate date,
+    l_action varchar(3),  l_ramcom_pol varchar(20),  l_scoderrors char(255),    counter integer
+  ) in d5dbs extent size 10000 next size 1000 lock mode page;
+
+{ TABLE "informix".wbsprcselpro002 row size = 81 number of columns = 21 index size 
+              = 0 }
+create table "informix".wbsprcselpro002 
+  (
+    l_comp_code integer,    l_premium integer,    l_type_doc integer,    l_rectype integer,
+    l_cuponera integer,    l_ramcom integer,    l_policy integer,    l_validity_beg date,
+    l_validity_end date,    lc_customer char(10),    l_certificado char(10),    l_coinsuran char(1),
+    l_consortium char(1),    l_reinsuran char(1),    l_nullcode char(3),    l_premium_rev integer,
+    l_premium_libcom smallint, l_effecdate_pol date, l_expirdat_pol date, l_endo_pol char(1),   l_scoderrors char(1),    counter integer,    sequence integer,
+    l_transac integer
+  ) in d5dbs extent size 20000 next size 5000 lock mode page;
+
+{ TABLE "informix".wbsprcselpro003 row size = 308 number of columns = 13 index size 
+              = 0 }
+create table "informix".wbsprcselpro003 
+  (
+    l_company integer,    l_typedoc integer,    l_rectype integer,    l_cuponera integer,
+    l_issuedat date,    l_statdate date,    l_receipt integer,    l_currency smallint,
+    l_usercode varchar(10),    sequence integer,    p_ntransac integer,    counter integer,
+    l_scoderrors char(255)
+  ) in d5dbs extent size 10000 next size 1000 lock mode page;
+
+{ TABLE "informix".wbsprcselpro004 row size = 367 number of columns = 25 index size 
+              = 0 }
+create table "informix".wbsprcselpro004 
+  (
+    l_item_num integer,    l_acc_class char(1),    l_type_doc integer,    li_rectype integer,
+    l_origincoupon integer,    l_db_cr_ind char(1),    l_bus_area integer,    l_ori_amo decimal(18,6),
+    l_assig_igv char(2),    p_receipt integer,    l_account char(10),    l_cli_debtor char(10),
+    l_cli_provider char(10),    l_expirdat date,    lc_usercomp integer,    lc_company integer,
+    lc_ramcon integer,    li_zipcode integer,    l_segment integer,    l_intertyp integer,
+    li_ramcom integer, l_bussiunit char(2), l_scoderrors char(255),    counter integer,    p_transac integer,
+    sequence integer
+  ) in d5dbs extent size 30000 next size 5000 lock mode page;
+
+{ TABLE "informix".wbsprcselpro005 row size = 364 number of columns = 18 index size 
+              = 0 }
+create table "informix".wbsprcselpro005 
+  (
+    l_comp_code integer,    p_receipt integer,    l_type_doc integer,    l_rectype integer,
+    l_origincoupon integer,    l_coinsurer char(10),    l_coinsuran_date date,    l_coinsuran_percent decimal(13,2),
+    l_prem_trans_amount decimal(13,2),    l_coinsuran_commision decimal(13,2),    l_extemporaneous char(1),    l_coinsuran_expense decimal(13,2),
+    l_coinsuran_expense_igv decimal(13,2),    lc_payroll char(22),    counter integer,    p_transac integer,
+    sequence integer,    l_scoderrors char(255)
+  ) in d5dbs extent size 20000 next size 2000 lock mode page;
+
+{ TABLE "informix".wbsprcselpro006 row size = 322 number of columns = 14 index size 
+              = 0 }
+create table "informix".wbsprcselpro006 
+  (
+    l_comp_code integer,    p_receipt integer,    l_type_doc integer,    l_rectype integer,
+    l_origincoupon integer,    l_vendor_no char(10),    l_vendor_role integer,    l_comm_amount decimal(13,2),
+    l_comm_percent decimal(13,2),    l_base_net_amount decimal(13,2),    l_tax_indicator char(1),    counter integer,
+    nsequence integer,    l_scoderrors char(255)
+  ) in d5dbs extent size 5000 next size 1000 lock mode page;
+
+{ TABLE "informix".wbsprcselpro007 row size = 674 number of columns = 89 index size 
+              = 0 }
+create table "informix".wbsprcselpro007 
+  (
+    l_instance smallint,    l_risk smallint,    l_office smallint,    l_branch smallint,
+    l_policy integer,    l_startdate date,    l_enddate date,    l_client_iq varchar(11),
+    l_type_doc_iq varchar(2),    l_receipt integer,    l_financeco integer,    l_cuponera integer,
+    l_issuedat date,    l_fec_venc date,    l_currency_s varchar(2),    l_premium_n decimal(12,2),
+    l_premium_ad decimal(12,2),    l_premium_fin decimal(12,2),    l_premium_igv decimal(12,2),    l_premium decimal(12,2),
+    l_com_flag smallint,    l_com_percent decimal(10,4),    l_com_amount decimal(12,2),    l_client_int_iq varchar(11),
+    l_exchange decimal(6,3),    l_account_cd varchar(20),    l_account_cg varchar(20),    l_account_ga varchar(20),
+    l_account_ip varchar(20),    l_account_im varchar(20),    l_convenio integer,    l_fec_convenio date,
+    l_soperation varchar(3),    l_type_doc smallint,    l_type_fact smallint,    l_serie_fact smallint,
+    l_num_fact integer,    l_fec_fact date,    l_branch_multi smallint,    l_policy_multi integer,
+    l_int_rec_ori integer,    l_nullcode varchar(3),    l_nulldate date,    l_client_ins varchar(11),
+    l_client_int_ins varchar(11),    l_intermed integer,    l_currency smallint,    l_product smallint,
+    l_tratypei smallint,    l_status_pre varchar(2),    l_chanel smallint,    l_compdate date,
+    l_usercode smallint,    l_endosatario varchar(40),    l_bussityp char(1),    l_pay_type char(1),
+    l_bankext smallint,    l_acc_type smallint,    l_acc_number varchar(30),    l_supervis integer,
+    l_certif integer,    l_proc_cli integer,    l_proc_brok integer,    l_proc_ejec integer,
+    l_date_ctrl1 date,    l_date_ctrl2 date,    l_cod_rechazo smallint,    l_facultativo char(1),
+    l_gestion_directa char(1),    l_clie_endos varchar(11),    l_flag_cupon smallint,    l_nrehab smallint,
+    l_nullcodp smallint,    l_supervis_iq integer,    l_nsistorigin smallint,    l_chain varchar(100),
+    l_vehgroup smallint,    l_cupon smallint,    l_cardexpirdat date,    l_segment smallint,
+    l_segment_desc char(30),    l_st_cuponera char(1),    l_premium_rec decimal(12,2),    l_pnetcoa decimal(10,2),
+    l_pnetced decimal(10,2),    l_ind_consorcio char(1),    l_scoderrors varchar(50),    counter integer,
+    sequence integer
+  ) in d5dbs extent size 20000 next size 5000 lock mode page;
+end procedure;                                                                                                                                                              
