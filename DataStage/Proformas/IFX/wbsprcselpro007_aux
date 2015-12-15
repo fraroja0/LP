@@ -1,0 +1,142 @@
+create procedure "informix".wbsprcselpro007_aux (nsequence integer, p_receipt integer,counter integer)
+					
+define l_instance        smallint;
+  define l_risk            smallint;
+  define l_office          smallint;
+  define l_branch          smallint;
+  define l_policy          integer;
+  define l_startdate       date;
+  define l_enddate         date;
+  define l_type_doc_iq     char(02);
+  define l_receipt         integer;
+  define l_financeco       integer;
+  define l_cuponera        integer;
+  define l_issuedat        date;
+  define l_currency_s      char(02);
+  define l_premium_n       decimal(12,2);
+  define l_premium_ad      decimal(12,2);
+  define l_premium_fin     decimal(12,2);
+  define l_premium_igv     decimal(12,2);
+  define l_premium         decimal(12,2);
+  define l_com_flag        smallint;
+  define l_com_percent     decimal(10,4);
+  define l_com_amount      decimal(12,2);
+  define l_client_iq       integer;
+  define l_client_int_iq   integer;
+  define l_exchange        decimal(6,3);
+  define l_account_cd      varchar(20);
+  define l_account_cg      varchar(20);
+  define l_account_ga      varchar(20);
+  define l_account_ip      varchar(20);
+  define l_account_im      varchar(20);
+  define l_convenio        integer;
+  define l_soperation      char(03);
+  define l_type_doc        smallint;
+  define l_type_fact       smallint;
+  define l_serie_fact      smallint;
+  define l_num_fact        integer;
+  define l_fec_fact        date;
+  define l_branch_multi    smallint;
+  define l_policy_multi    integer ;
+  define l_int_rec_ori     integer ;
+  define l_nullcode        char(03);
+  define l_nulldate        date;
+  define l_client_ins      char(11);
+  define l_client_int_ins  char(11);
+  define l_intermed        integer;
+  define l_currency        smallint;
+  define l_product         smallint;
+  define l_tratypei        smallint;
+  define l_status_pre      char(02);
+  define l_chanel          smallint;
+  define l_compdate        date;
+  define l_usercode        smallint;
+  define l_endosatario     char(40);
+  define l_bussityp        char(01);
+  define l_pay_type        char(01);
+  define l_bankext         smallint;
+  define l_acc_type        smallint;
+  define l_acc_number      char(30);
+  define l_supervis        integer;
+  define l_certif          integer;
+  define l_proc_cli        integer;
+  define l_proc_brok       integer;
+  define l_proc_ejec       integer;
+  define l_date_ctrl1      date;
+  define l_date_ctrl2      date;
+  define l_cod_rechazo     smallint;
+  define l_facultativo     char(01);
+  define l_gestion_directa char(01);
+  define l_clie_endos      char(11);
+  define l_flag_cupon      smallint;
+  define l_nrehab          smallint;
+  define l_nullcodp        smallint;
+  define l_supervis_iq     integer;
+  define l_nsistorigin     smallint;
+  define l_chain           varchar(100);
+  define l_vehgroup        smallint;
+  define l_cupon           smallint;
+  define l_cardexpirdat    date;
+  define l_segment         smallint;
+  define l_segment_desc    char(30);
+  define l_st_cuponera     char(01);
+  define l_premium_rec     decimal(12,2);
+  define l_pnetcoa         decimal(10,2);
+  define l_pnetced         decimal(10,2);
+  define l_ind_consorcio   char(1);
+  define l_scoderrors      varchar(50);
+  define l_fec_venc        date;
+  define l_fec_convenio    date;
+	
+	foreach execute procedure 
+		"informix".wbsprcselpro007(p_receipt) into 
+				 l_instance,       l_risk,       l_office,      l_branch,
+         l_policy,         l_startdate,  l_enddate,     l_client_iq,
+         l_type_doc_iq,    l_receipt,    l_financeco,   l_cuponera,
+         l_issuedat,       l_fec_venc,   l_currency_s,  l_premium_n,
+         l_premium_ad,     l_premium_fin,l_premium_igv, l_premium,
+         l_com_flag,       l_com_percent,l_com_amount,  l_client_int_iq,
+         l_exchange,       l_account_cd, l_account_cg,  l_account_ga,
+         l_account_ip,     l_account_im, l_convenio,    l_fec_convenio,
+         l_soperation,     l_type_doc,   l_type_fact,   l_serie_fact,
+         l_num_fact,       l_fec_fact,   l_branch_multi,l_policy_multi,
+         l_int_rec_ori,    l_nullcode,   l_nulldate,    l_client_ins,
+         l_client_int_ins, l_intermed,   l_currency,    l_product,
+         l_tratypei,       l_status_pre, l_chanel,      l_compdate,
+         l_usercode,       l_endosatario,l_bussityp,    l_pay_type,
+         l_bankext,        l_acc_type,   l_acc_number,  l_supervis,
+         l_certif,         l_proc_cli,   l_proc_brok,   l_proc_ejec,
+         l_date_ctrl1,     l_date_ctrl2, l_cod_rechazo, l_facultativo,
+         l_gestion_directa,l_clie_endos, l_flag_cupon,  l_nrehab,
+         l_nullcodp,       l_supervis_iq,l_nsistorigin, l_chain,
+         l_vehgroup,       l_cupon,      l_cardexpirdat,l_segment,
+         l_segment_desc,   l_st_cuponera,l_premium_rec, l_pnetcoa,
+         l_pnetced,        l_ind_consorcio,l_scoderrors
+		
+			INSERT INTO "informix".wbsprcselpro007
+			VALUES (l_instance,       l_risk,       l_office,      l_branch,
+         l_policy,         l_startdate,  l_enddate,     l_client_iq,
+         l_type_doc_iq,    l_receipt,    l_financeco,   l_cuponera,
+         l_issuedat,       l_fec_venc,   l_currency_s,  l_premium_n,
+         l_premium_ad,     l_premium_fin,l_premium_igv, l_premium,
+         l_com_flag,       l_com_percent,l_com_amount,  l_client_int_iq,
+         l_exchange,       l_account_cd, l_account_cg,  l_account_ga,
+         l_account_ip,     l_account_im, l_convenio,    l_fec_convenio,
+         l_soperation,     l_type_doc,   l_type_fact,   l_serie_fact,
+         l_num_fact,       l_fec_fact,   l_branch_multi,l_policy_multi,
+         l_int_rec_ori,    l_nullcode,   l_nulldate,    l_client_ins,
+         l_client_int_ins, l_intermed,   l_currency,    l_product,
+         l_tratypei,       l_status_pre, l_chanel,      l_compdate,
+         l_usercode,       l_endosatario,l_bussityp,    l_pay_type,
+         l_bankext,        l_acc_type,   l_acc_number,  l_supervis,
+         l_certif,         l_proc_cli,   l_proc_brok,   l_proc_ejec,
+         l_date_ctrl1,     l_date_ctrl2, l_cod_rechazo, l_facultativo,
+         l_gestion_directa,l_clie_endos, l_flag_cupon,  l_nrehab,
+         l_nullcodp,       l_supervis_iq,l_nsistorigin, l_chain,
+         l_vehgroup,       l_cupon,      l_cardexpirdat,l_segment,
+         l_segment_desc,   l_st_cuponera,l_premium_rec, l_pnetcoa,
+         l_pnetced,        l_ind_consorcio,l_scoderrors, counter, nsequence);
+			
+	end foreach;
+
+end procedure;                                                                                                                                                
