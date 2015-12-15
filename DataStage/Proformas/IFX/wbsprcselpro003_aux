@@ -1,0 +1,34 @@
+create procedure "informix".wbsprcselpro003_aux (nsequence integer, p_receipt integer,p_transac integer,counter integer)
+
+					
+  define l_company    integer;
+  define l_typedoc    integer;
+  define l_rectype    integer;
+  define l_cuponera   integer;
+  define l_issuedat   date;
+  define l_statdate   date;
+  define l_receipt    integer;
+  define l_currency   smallint;
+  define l_usercode   varchar(10);
+  define sql_err            int;
+  define isam_err           int;
+  define error_info         char(100);
+	
+	on exception set sql_err,isam_err,error_info
+	INSERT INTO "informix".wbsprcselpro003
+			VALUES (l_company,l_typedoc,l_rectype,l_cuponera,l_issuedat,l_statdate,
+         			l_receipt,l_currency,l_usercode,nsequence,p_transac,counter,sql_err||': '||error_info);
+	end exception;
+
+	foreach execute procedure 
+		"informix".wbsprcselpro003(p_receipt,p_transac) into l_company,l_typedoc,l_rectype,l_cuponera,l_issuedat,l_statdate,
+         											 l_receipt,l_currency,l_usercode
+
+			INSERT INTO "informix".wbsprcselpro003 (l_company,l_typedoc,l_rectype,l_cuponera,l_issuedat,l_statdate,l_receipt,l_currency,l_usercode,sequence,p_ntransac,counter)
+			VALUES (l_company,l_typedoc,l_rectype,l_cuponera,l_issuedat,l_statdate,
+         			l_receipt,l_currency,l_usercode,nsequence,p_transac,counter);
+			
+					
+	end foreach;
+
+end procedure;                                                                                                                                                                                             
