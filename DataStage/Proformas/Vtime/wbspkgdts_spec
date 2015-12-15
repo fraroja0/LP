@@ -1,0 +1,138 @@
+CREATE OR REPLACE PACKAGE wbspkgdts AUTHID CURRENT_USER
+AS
+
+   PROCEDURE wbsprcselclidt00901;
+
+   PROCEDURE wbsprcselclidt01201;
+
+   PROCEDURE wbsprcselclidt001(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+   PROCEDURE wbsprcselclidt002(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+   PROCEDURE wbsprcselclidt003(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+   PROCEDURE wbsprcselclidt004(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+   PROCEDURE wbsprcselclidt005(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+   PROCEDURE wbsprcselclidt006(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+
+   PROCEDURE wbsprcselclidt011(
+      LSCLIENT IN WBSTBLINTFCLIEN_AUX.SCLIENT%TYPE,
+      LCOUNTER IN WBSTBLINTFCLIEN_AUX.COUNTER%TYPE,
+      NSEQUENCE IN WBSTBLINTFCLIEN_AUX.NSEQUENCE%TYPE
+   );
+
+   PROCEDURE CLEAN_TMP_CLIENTE;
+
+   PROCEDURE wbsprcselprodt001(
+      NSEQUENCE     IN  WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      COUNTER       IN  INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt002 (
+      NSEQUENCE          IN  WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      nreceipt           IN       premium.nreceipt%TYPE,
+      ntransac           IN       premium_mo.ntransac%TYPE,
+      counter            IN       INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt003 (
+      NSEQUENCE          IN  WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      nreceipt           IN       premium.nreceipt%TYPE,
+      ntransac           IN       premium_mo.ntransac%TYPE,
+      counter            IN       INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt004 (
+      NSEQUENCE          IN  WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      nreceipt           IN       premium.nreceipt%TYPE,
+      ntransac           IN       premium_mo.ntransac%TYPE,
+      counter            IN       INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt005 (
+      NSEQUENCE          IN  WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      nreceipt           IN       premium.nreceipt%TYPE,
+      ntransac           IN       premium_mo.ntransac%TYPE,
+      counter            IN       INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt006 (
+      NSEQUENCE  IN  WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      nreceipt   IN   premium.nreceipt%TYPE,
+      counter    IN   INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt007(
+      nsequence          IN    WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      nreceipt   IN   premium.nreceipt%TYPE,
+      counter    IN   INTEGER
+   );
+
+   PROCEDURE wbsprcselprodt008(
+      nsequence          IN    WBSTBLRECEIPT.NSEQUENCE%TYPE,
+      counter    IN   INTEGER
+   );
+   
+   PROCEDURE premium_commision_sp(
+      comp_code         IN premium_commision.comp_code%TYPE,
+      premium           in premium_commision.premium%TYPE,
+      sp_gl_ind         in premium_commision.sp_gl_ind%TYPE,
+      vendor_no         in premium_commision.vendor_no%TYPE,
+      vendor_role       in premium_commision.vendor_role%TYPE,
+      commision_amount  in premium_commision.commision_amount%TYPE,
+      commision_percent in premium_commision.commision_percent%TYPE,
+      base_net_amount   in premium_commision.base_net_amount%TYPE,
+      tax_indicator     in premium_commision.tax_indicator%TYPE,
+      counter           in premium_commision.counter%TYPE
+   );
+
+   PROCEDURE premium_coinsuran_sp(
+      comp_code         IN premium_coinsuran.comp_code%TYPE,
+      premium           in premium_coinsuran.premium%TYPE,
+      sp_gl_ind         in premium_coinsuran.sp_gl_ind%TYPE,
+      coinsurer         in premium_coinsuran.coinsurer%TYPE,
+      coinsuran_date    in premium_coinsuran.coinsuran_date%TYPE,
+      coinsuran_percent in premium_coinsuran.coinsuran_percent%TYPE,
+      premium_transferred_amount in premium_coinsuran.premium_transferred_amount%TYPE,
+      coinsuran_commision in premium_coinsuran.coinsuran_commision%TYPE,
+      extemporaneous    in premium_coinsuran.extemporaneous%TYPE,
+      coinsuran_expense in premium_coinsuran.coinsuran_expense%TYPE,
+      coinsuran_expense_igv in premium_coinsuran.coinsuran_expense_igv%TYPE,
+      planilla_prima    in premium_coinsuran.planilla_prima%TYPE,
+      counter           in premium_coinsuran.counter%TYPE
+   );
+
+   PROCEDURE CLEAN_TMP_AR001;
+
+   PROCEDURE last_row_ZE1ARRET000_AR025;
+
+   PROCEDURE CLEAN_TMP_AR025;
+
+END wbspkgdts; 
