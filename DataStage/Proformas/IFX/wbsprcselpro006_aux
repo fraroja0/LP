@@ -1,0 +1,41 @@
+create procedure "informix".wbsprcselpro006_aux (nsequence integer, p_receipt integer,counter integer)
+
+  define l_comp_code       integer;
+  define l_vendor_no       char(10);
+  define l_vendor_role     integer;
+  define l_comm_amount     decimal(13,2);
+  define l_comm_percent    decimal(13,2);
+  define l_base_net_amount decimal(13,2);
+  define l_tax_indicator   char(01);
+  define l_rectype         integer;
+  define l_origincoupon    integer;
+  define l_type_doc        integer;
+  define sql_err            int;
+  define isam_err           int;
+  define error_info         char(100);
+	
+	on exception set sql_err,isam_err,error_info
+	INSERT INTO "informix".wbsprcselpro006
+			VALUES (l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_vendor_no,
+						 	l_vendor_role,l_comm_amount,l_comm_percent,l_base_net_amount,l_tax_indicator,
+						 	counter,nsequence,sql_err||': '||error_info);
+	end exception;	
+
+	foreach execute procedure 
+		"informix".wbsprcselpro006(p_receipt) into l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_vendor_no,
+						 									 l_vendor_role,l_comm_amount,l_comm_percent,l_base_net_amount,l_tax_indicator	
+
+			INSERT INTO "informix".wbsprcselpro006(l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_vendor_no,l_vendor_role,
+									l_comm_amount,l_comm_percent,l_base_net_amount,l_tax_indicator,counter,nsequence)
+
+			VALUES (l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_vendor_no,
+						 	l_vendor_role,l_comm_amount,l_comm_percent,l_base_net_amount,l_tax_indicator,
+						 	counter,nsequence);
+			
+			/*return l_comp_code,p_receipt,l_type_doc,l_rectype,l_origincoupon,l_vendor_no,
+						 l_vendor_role,l_comm_amount,l_comm_percent,l_base_net_amount,
+						 l_tax_indicator with resume;*/
+					
+	end foreach;
+
+end procedure;                                                                                                                                                                                                                                                       
