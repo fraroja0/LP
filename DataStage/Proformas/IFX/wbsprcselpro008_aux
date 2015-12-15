@@ -1,0 +1,25 @@
+create procedure 'informix'.wbsprcselpro008_aux(nsequence integer,counter integer)
+
+  define li_company smallint;
+  define li_receipt integer;
+  define lc_ind_coa char(01);
+  define ls_nullreason smallint;
+  define ld_dstatdate date;
+  define sql_err int;
+  define isam_err int;
+  define error_info char(100);
+	
+	on exception set sql_err,isam_err,error_info
+	INSERT INTO 'informix'.wbsprcselpro008 (li_company, li_receipt, lc_ind_coa, ls_nullreason, ld_dstatdate, counter, nsequence, error)
+			VALUES (li_company, li_receipt, lc_ind_coa, ls_nullreason, ld_dstatdate, counter, nsequence, sql_err||': '||error_info);
+	end exception;	
+
+	foreach execute procedure 
+		"informix".wbsprcselpro008(nsequence) into  li_company, li_receipt, lc_ind_coa, ls_nullreason, ld_dstatdate
+	
+			INSERT INTO 'informix'.wbsprcselpro008 (li_company, li_receipt, lc_ind_coa, ls_nullreason, ld_dstatdate, counter, nsequence)
+			VALUES (li_company, li_receipt, lc_ind_coa, ls_nullreason, ld_dstatdate, counter, nsequence);
+							
+	end foreach;
+
+end procedure;    
