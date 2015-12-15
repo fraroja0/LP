@@ -1,0 +1,42 @@
+create procedure "informix".wbsprcselpro004_aux (nsequence integer, p_receipt integer,p_transac integer,counter integer)
+
+	define l_item_num, l_bus_area, l_segment, l_intertyp, li_ramcom,
+         li_rectype, l_origincoupon,
+         l_type_doc, lc_usercomp, lc_company, lc_ramcon integer;
+  define l_ori_amo decimal(18,6);
+  define l_assig_igv             char(02);
+  define l_account               char(10);
+  define l_cli_debtor            char(10);
+  define l_cli_provider          char(10);
+  define li_zipcode              like address.zipcode;
+  define l_fec_venc              like premium.expirdat;
+  define l_acc_class, l_db_cr_ind char(01);
+  define l_bussiunit 							char(2);
+  define l_scoderrors char(255);
+  define sql_err            int;
+  define isam_err           int;
+  define error_info         char(100);
+	
+	on exception set sql_err,isam_err,error_info
+	INSERT INTO "informix".wbsprcselpro004
+			VALUES (l_item_num, l_acc_class, l_type_doc, li_rectype, l_origincoupon, l_db_cr_ind,
+ 						 l_bus_area, l_ori_amo, l_assig_igv, p_receipt, l_account, l_cli_debtor, l_cli_provider,
+						 l_fec_venc, lc_usercomp, lc_company, lc_ramcon, li_zipcode, l_segment, l_intertyp, li_ramcom, l_bussiunit,
+						 sql_err||': '||error_info,counter,p_transac,nsequence);
+
+	end exception;
+
+	foreach execute procedure 
+		"informix".wbsprcselpro004(p_receipt,p_transac) into l_item_num, l_acc_class, l_type_doc, li_rectype, l_origincoupon, l_db_cr_ind,
+ 															 l_bus_area, l_ori_amo, l_assig_igv, p_receipt, l_account, l_cli_debtor, l_cli_provider,
+															 l_fec_venc, lc_usercomp, lc_company, lc_ramcon, li_zipcode, l_segment, l_intertyp, li_ramcom, l_bussiunit,l_scoderrors
+		
+			INSERT INTO "informix".wbsprcselpro004
+			VALUES (l_item_num, l_acc_class, l_type_doc, li_rectype, l_origincoupon, l_db_cr_ind,
+ 						 l_bus_area, l_ori_amo, l_assig_igv, p_receipt, l_account, l_cli_debtor, l_cli_provider,
+						 l_fec_venc, lc_usercomp, lc_company, lc_ramcon, li_zipcode, l_segment, l_intertyp, li_ramcom, l_bussiunit,
+						 l_scoderrors,counter,p_transac,nsequence);
+							
+	end foreach;
+
+end procedure;                                                                                                                                                                                  
